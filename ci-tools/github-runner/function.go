@@ -63,6 +63,7 @@ func handleCleanup(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleLaunch(w http.ResponseWriter, r *http.Request) {
+    log.Printf("Entered launch handler: v6\n")
 	if r.Method != "POST" {
 		http.Error(w, "Must be POST", http.StatusBadRequest)
 		return
@@ -72,9 +73,12 @@ func handleLaunch(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error reading app id: %v\n", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
-
 	}
-	secretToken, err := os.ReadFile("/etc/secrets/caliptra-gce-ci-github-webhook-secret-txt/latest")
+
+    log.Printf("Using GitHub AppID: %v\n", appID)
+
+
+    secretToken, err := os.ReadFile("/etc/secrets/caliptra-gce-ci-github-webhook-secret-txt/latest")
 	if err != nil {
 		log.Printf("Error reading webhook secret: %v\n", err)
 		http.Error(w, "", http.StatusInternalServerError)
@@ -187,6 +191,7 @@ func createInstanceAndStart(ctx context.Context, instances *compute.InstancesCli
 		instanceDelete(ctx, instances, req.InstanceResource.GetName())
 		return err
 	}
+    log.Printf("Finished createInstanceAndStart without any errors.\n")
 	return nil
 }
 
