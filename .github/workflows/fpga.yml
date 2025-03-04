@@ -283,47 +283,47 @@ jobs:
         run: |
           echo "Hello world"
 
-  build_bitstream:
-    runs-on: [e2-standard-8, fpga-tools]
-    timeout-minutes: 180
-  
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          submodules: 'true'
-  
-      - name: Mount FPGA tools
-        run: |
-          # This is an installation of Vivado 22.2 with support for Zynq Ultrascale+
-          sudo mkdir /fpga-tools
-          sudo mount UUID=be18f242-fb8d-4d99-971e-a8ae390ad620 /fpga-tools/
-  
-      - name: Build FPGA bitstream
-        run: |
-          cd hw/fpga
-          mkdir caliptra_build
-          if [ "${{ inputs.fpga-itrng }}" == "false" ]; then
-            ITRNG=FALSE
-          else
-            ITRNG=TRUE
-          fi
-          if [ "${{ inputs.workflow_call }}" ]; then
-            RTL_VERSION="${{ inputs.hw-version }}"
-          else
-            RTL_VERSION="latest"
-          fi
-          /fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE ITRNG=${ITRNG} RTL_VERSION=${RTL_VERSION}
-          if [ ! -f caliptra_build/caliptra_fpga.bin ]; then
-            echo "Output file was not found; failing script"
-            exit 1
-          fi
-
-      - name: 'Upload FPGA bitstream artifact'
-        uses: actions/upload-artifact@v4
-        with:
-          name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: hw/fpga/caliptra_build/caliptra_fpga.bin
+  # build_bitstream:
+  #   runs-on: [e2-standard-8, fpga-tools]
+  #   timeout-minutes: 180
+  #
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         submodules: 'true'
+  #
+  #     - name: Mount FPGA tools
+  #       run: |
+  #         # This is an installation of Vivado 22.2 with support for Zynq Ultrascale+
+  #         sudo mkdir /fpga-tools
+  #         sudo mount UUID=be18f242-fb8d-4d99-971e-a8ae390ad620 /fpga-tools/
+  #
+  #     - name: Build FPGA bitstream
+  #       run: |
+  #         cd hw/fpga
+  #         mkdir caliptra_build
+  #         if [ "${{ inputs.fpga-itrng }}" == "false" ]; then
+  #           ITRNG=FALSE
+  #         else
+  #           ITRNG=TRUE
+  #         fi
+  #         if [ "${{ inputs.workflow_call }}" ]; then
+  #           RTL_VERSION="${{ inputs.hw-version }}"
+  #         else
+  #           RTL_VERSION="latest"
+  #         fi
+  #         /fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE ITRNG=${ITRNG} RTL_VERSION=${RTL_VERSION}
+  #         if [ ! -f caliptra_build/caliptra_fpga.bin ]; then
+  #           echo "Output file was not found; failing script"
+  #           exit 1
+  #         fi
+  #
+  #     - name: 'Upload FPGA bitstream artifact'
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
+  #         path: hw/fpga/caliptra_build/caliptra_fpga.bin
 
   # cache_fpga_bitstream_artifact:
   #   runs-on: ubuntu-22.04
