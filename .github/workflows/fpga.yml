@@ -309,31 +309,31 @@ jobs:
             exit 1
           fi
 
-      - name: 'Upload FPGA bitstream artifact'
-        uses: actions/upload-artifact@v4
-        with:
-          name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: hw/fpga/caliptra_build/caliptra_fpga.bin
+      # - name: 'Upload FPGA bitstream artifact'
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
+      #     path: hw/fpga/caliptra_build/caliptra_fpga.bin
 
-  cache_fpga_bitstream_artifact:
-    runs-on: ubuntu-22.04
-
-    # If we write to the cache from the self-hosted runner, the result is
-    # usually not accessible from GitHub-hosted runners. So cache the artifact
-    # instead.
-
-    steps:
-      - name: 'Download FPGA Bitstream Artifact'
-        uses: actions/download-artifact@v4
-        with:
-          name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: /tmp/caliptra-fpga-bitstream
-
-      - name: Save FPGA bitstream to cache
-        uses: actions/cache/save@v3
-        with:
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
-          key: ${{ needs.check_cache.outputs.rtl_cache_key }}
+  # cache_fpga_bitstream_artifact:
+  #   runs-on: ubuntu-22.04
+  #
+  #   # If we write to the cache from the self-hosted runner, the result is
+  #   # usually not accessible from GitHub-hosted runners. So cache the artifact
+  #   # instead.
+  #
+  #   steps:
+  #     - name: 'Download FPGA Bitstream Artifact'
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
+  #         path: /tmp/caliptra-fpga-bitstream
+  #
+  #     - name: Save FPGA bitstream to cache
+  #       uses: actions/cache/save@v3
+  #       with:
+  #         path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
+  #         key: ${{ needs.check_cache.outputs.rtl_cache_key }}
 
   # test_artifacts:
   #   runs-on: caliptra-fpga
