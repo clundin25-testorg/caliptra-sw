@@ -276,21 +276,21 @@ jobs:
 
   build_bitstream:
     #runs-on: [n2d-highmem-32, fpga-tools]
-    runs-on: [e2-standard-2, fpga-tools]
-    timeout-minutes: 15
+    runs-on: [vck190-builder]
+    timeout-minutes: 90
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
           submodules: 'true'
-
-      - name: Mount FPGA tools
-        run: |
-          # This is an installation of Vivado 22.2 with support for Zynq Ultrascale+
-          echo "Starting work"
-          sudo mkdir /fpga-tools
-          sudo mount UUID=be18f242-fb8d-4d99-971e-a8ae390ad620 /fpga-tools/
+      #
+      # - name: Mount FPGA tools
+      #   run: |
+      #     # This is an installation of Vivado 22.2 with support for Zynq Ultrascale+
+      #     echo "Starting work"
+      #     sudo mkdir /fpga-tools
+      #     sudo mount UUID=be18f242-fb8d-4d99-971e-a8ae390ad620 /fpga-tools/
 
       - name: Build FPGA bitstream
         run: |
