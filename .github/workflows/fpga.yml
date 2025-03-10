@@ -283,9 +283,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          submodules: 'true'
-      - name: Make sure recursive submodules are checked out
-        run: git submodule update --init --recursive .
+          submodules: 'recursive' # There are nested submodules that we need.
       #
       # - name: Mount FPGA tools
       #   run: |
