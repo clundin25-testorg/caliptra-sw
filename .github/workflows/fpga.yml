@@ -297,7 +297,7 @@ jobs:
           cd hw/fpga
           mkdir caliptra_build
           /fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE
-          if [ ! -f caliptra_build/caliptra_fpga.bin ]; then
+          if [ ! -f caliptra_build/caliptra_fpga.xsa ]; then
             echo "Output file was not found; failing script"
             exit 1
           fi
@@ -306,7 +306,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: hw/fpga/caliptra_build/caliptra_fpga.bin
+          path: hw/fpga/caliptra_build/caliptra_fpga.xsa
 
   cache_fpga_bitstream_artifact:
     runs-on: ubuntu-22.04
