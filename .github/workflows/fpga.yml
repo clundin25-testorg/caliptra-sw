@@ -327,7 +327,7 @@ jobs:
       - name: Save FPGA bitstream to cache
         uses: actions/cache/save@v3
         with:
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
+          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa
           key: ${{ needs.check_cache.outputs.rtl_cache_key }}
 
   # test_artifacts:
