@@ -362,7 +362,7 @@ jobs:
       !cancelled() &&
       needs.check_cache.result == 'success' &&
       (needs.build_bitstream.result == 'success' || needs.build_bitstream.result == 'skipped') &&
-      (needs.build_test_binaries.result == 'success' || needs.build_test_binaries.result == 'skipped') &&
+      (needs.build_test_binaries.result == 'success' || needs.build_test_binaries.result == 'skipped')
 
     steps:
       - name: Checkout repo
