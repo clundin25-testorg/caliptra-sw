@@ -212,6 +212,7 @@ jobs:
 
       - name: Build test firmware
         run: |
+          rustup target add riscv32imc-unknown-none-elf
           mkdir /tmp/caliptra-test-firmware
 
           FEATURES=""
