@@ -240,7 +240,7 @@ jobs:
           echo I am ${USER}
 
           # instead of 5.15.0-1015-xilinx-zynqmp used by the pre-built kernel.
-          curl -o /tmp/sysroot.tar.gz https://people.canonical.com/~platform/images/xilinx/zcu-ubuntu-22.04/iot-limerick-zcu-classic-desktop-2204-x05-2-20221123-58-rootfs.tar.gz
+          curl -o /tmp/sysroot.tar.gz https://people.canonical.com/~platform/images/xilinx/versal-ubuntu-22.04/iot-limerick-versal-classic-server-2204-x02-20230315-48-rootfs.tar.gz
           SYSROOT="${GITHUB_WORKSPACE}/sysroot"
           mkdir "${SYSROOT}"
           sudo tar xf /tmp/sysroot.tar.gz -C "${SYSROOT}"
