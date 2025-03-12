@@ -233,7 +233,7 @@ jobs:
       - name: Install sysroot pre-requisites
         run: |
           sudo apt-get update
-          sudo apt-get -y install debootstrap binfmt-support qemu-user-static u-boot-tools
+          sudo apt-get -y install debootstrap binfmt-support qemu-user-static u-boot-tools make gcc
 
       - name: Setup xilinx sysroot
         run: |
