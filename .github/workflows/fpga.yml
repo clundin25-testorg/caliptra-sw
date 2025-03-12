@@ -47,7 +47,7 @@ jobs:
     outputs:
       rtl_cache_key: ${{ steps.cache_key.outputs.rtl_cache_key }}
       kmod_cache_key: ${{ steps.cache_key.outputs.kmod_cache_key}}
-      rtl_cache_hit: ${{ steps.restore_rtl_cache.outputs.cache-hit }}
+      rtl_cache_hit: ${{ steps.restore_rtl_bitstream_cache.outputs.cache-hit }}
       kmod_cache_hit: ${{ steps.restore_kmod_cache.outputs.cache-hit }}
 
     steps:
@@ -72,14 +72,14 @@ jobs:
 
       - name: Restore FPGA bitstream from cache
         uses: actions/cache/restore@v3
-        id: restore_rtl_cache
+        id: restore_rtl_bitstream_cache
         with:
           path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa
           key: ${{ steps.cache_key.outputs.rtl_cache_key }}
 
       - name: Restore FPGA BOOT bin from cache
         uses: actions/cache/restore@v3
-        id: restore_rtl_cache
+        id: restore_rtl_bin_cache
         with:
           path: /tmp/caliptra-fpga-bitstream/BOOT.bin
           key: ${{ steps.cache_key.outputs.rtl_cache_key }}
@@ -92,7 +92,7 @@ jobs:
           key: ${{ steps.cache_key.outputs.kmod_cache_key}}
 
       - name: 'Upload FPGA bitstream artifact'
-        if: steps.restore_rtl_cache.outputs.cache-hit
+        if: steps.restore_rtl_bitstream_cache.outputs.cache-hit
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
@@ -100,7 +100,7 @@ jobs:
           retention-days: 7
 
       - name: 'Upload FPGA BOOT bin artifact'
-        if: steps.restore_rtl_cache.outputs.cache-hit
+        if: steps.restore_rtl_bin_cache.outputs.cache-hit
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
