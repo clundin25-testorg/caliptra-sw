@@ -314,20 +314,61 @@ jobs:
             exit 1
           fi
 
-          source /fpga-tools/petalinux/settings.sh
-          ./create_boot_bin.sh $PWD/caliptra_build/caliptra_fpga.xsa
-
+          # source /fpga-tools/petalinux/settings.sh
+          # ./create_boot_bin.sh $PWD/caliptra_build/caliptra_fpga.xsa
+          #
       - name: 'Upload FPGA bitstream artifact'
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
           path: hw/fpga/caliptra_build/caliptra_fpga.xsa
 
-      - name: 'Upload FPGA boot artifact'
-        uses: actions/upload-artifact@v4
-        with:
-          name: caliptra-fpga-boot${{ inputs.artifact-suffix }}
-          path: hw/fpga/petalinux_project/images/linux/BOOT.BIN
+      # - name: 'Upload FPGA boot artifact'
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: caliptra-fpga-boot${{ inputs.artifact-suffix }}
+      #     path: hw/fpga/petalinux_project/images/linux/BOOT.BIN
+
+  # build_bootloader:
+  #   runs-on: ubuntu-22.04
+  #
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         submodules: 'recursive' # There are nested submodules that we need.
+  #
+  #     - name: Mount FPGA tools
+  #       run: |
+  #         # This is an installation of Vivado 22.2 with support for Zynq Ultrascale+
+  #         echo "Starting work"
+  #         sudo mkdir /fpga-tools
+  #         sudo mount UUID=be18f242-fb8d-4d99-971e-a8ae390ad620 /fpga-tools/
+  #
+  #     - name: Build FPGA bitstream
+  #       run: |
+  #         cd hw/fpga
+  #         mkdir caliptra_build
+  #         /fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE
+  #         if [ ! -f caliptra_build/caliptra_fpga.xsa ]; then
+  #           echo "XSA file was not found; failing script"
+  #           exit 1
+  #         fi
+  #
+  #         source /fpga-tools/petalinux/settings.sh
+  #         ./create_boot_bin.sh $PWD/caliptra_build/caliptra_fpga.xsa
+  #
+  #     - name: 'Upload FPGA bitstream artifact'
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
+  #         path: hw/fpga/caliptra_build/caliptra_fpga.xsa
+  #
+  #     - name: 'Upload FPGA boot artifact'
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: caliptra-fpga-boot${{ inputs.artifact-suffix }}
+  #         path: hw/fpga/petalinux_project/images/linux/BOOT.BIN
 
   cache_fpga_bitstream_artifact:
     runs-on: ubuntu-22.04
