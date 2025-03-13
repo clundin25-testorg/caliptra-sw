@@ -46,9 +46,8 @@ jobs:
 
     outputs:
       rtl_cache_key: ${{ steps.cache_key.outputs.rtl_cache_key }}
-      kmod_cache_key: ${{ steps.cache_key.outputs.kmod_cache_key}}
       rtl_cache_hit: ${{ steps.restore_rtl_bitstream_cache.outputs.cache-hit }}
-      kmod_cache_hit: ${{ steps.restore_kmod_cache.outputs.cache-hit }}
+      bin_cache_hit: ${{ steps.restore_rtl_bin_cache.outputs.cache-hit }}
 
     steps:
       - name: Checkout repo
@@ -84,13 +83,6 @@ jobs:
           path: /tmp/caliptra-fpga-bitstream/BOOT.bin
           key: ${{ steps.cache_key.outputs.rtl_cache_key }}
 
-      - name: Restore kernel modules from cache
-        uses: actions/cache/restore@v3
-        id: restore_kmod_cache
-        with:
-          path: /tmp/caliptra-fpga-kmod/
-          key: ${{ steps.cache_key.outputs.kmod_cache_key}}
-
       - name: 'Upload FPGA bitstream artifact'
         if: steps.restore_rtl_bitstream_cache.outputs.cache-hit
         uses: actions/upload-artifact@v4
@@ -106,14 +98,6 @@ jobs:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
           path: /tmp/caliptra-fpga-bitstream/BOOT.bin
           retention-days: 7
-
-      - name: 'Upload kernel module artifacts'
-        if: steps.restore_kmod_cache.outputs.cache-hit
-        uses: actions/upload-artifact@v4
-        with:
-          name: caliptra-fpga-kmod${{ inputs.artifact-suffix }}
-          path: /tmp/caliptra-fpga-kmod/
-          retention-days: 1
 
   build_test_binaries:
     runs-on: [e2-standard-16]
@@ -290,6 +274,7 @@ jobs:
     #runs-on: [n2d-highmem-32, fpga-tools]
     runs-on: [vck190-builder]
     timeout-minutes: 720
+    if: "!needs.check_cache.outputs.rtl_cache_hit"
 
     steps:
       - name: Checkout repo
