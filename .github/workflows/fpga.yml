@@ -261,7 +261,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install gcc libncurses-dev zlib1g:i386 net-tools xterm autoconf libtool texinfo gcc-multilib build-essential -y
+          sudo apt install gcc libncurses-dev zlib1g:i386 zlib1g net-tools xterm autoconf libtool texinfo gcc-multilib build-essential -y
 
       - name: 'Download FPGA Bitstream Artifact'
         uses: actions/download-artifact@v4
