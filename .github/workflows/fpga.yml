@@ -250,7 +250,7 @@ jobs:
 
   build_bootloader:
     runs-on: [e2-standard-8, fpga-build-tools]
-    #needs: [build_bitstream]
+    needs: [build_bitstream]
 
     steps:
       - name: Checkout repo
