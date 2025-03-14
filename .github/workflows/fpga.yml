@@ -211,8 +211,7 @@ jobs:
         run: |
           cd hw/fpga
           mkdir caliptra_build
-          #/fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE
-          echo "test" > caliptra_build/caliptra_fpga.xsa 
+          /fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE
           if [ ! -f caliptra_build/caliptra_fpga.xsa ]; then
             echo "XSA file was not found; failing script"
             exit 1
@@ -302,12 +301,6 @@ jobs:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
           path: /tmp/caliptra-fpga-bitstream
 
-      # - name: 'Download kernel driver artifacts'
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: caliptra-fpga-kmod${{ inputs.artifact-suffix }}
-      #     path: /tmp/caliptra-fpga-kmod/
-
       - name: 'Download Test Binaries Artifact'
         uses: actions/download-artifact@v4
         with:
@@ -355,12 +348,6 @@ jobs:
           # sudo insmod /tmp/caliptra-fpga-kmod/rom_backdoor.ko
           sudo apt install make gcc
           sudo ./hw/fpga/setup_fpga.sh
-
-
-
-      # - name: Set clock rate
-      #   run: |
-      #     sudo bash -c 'echo 20000000 > /sys/bus/platform/drivers/xilinx_fclk/fclk0/set_rate'
 
       - name: Execute tests
         run: |
