@@ -346,7 +346,7 @@ jobs:
 
   cache_fpga_bitstream_artifact:
     runs-on: ubuntu-22.04
-    needs: [check_cache, build_bitstream, build_bootloader]
+    needs: [check_cache]
     if: "!needs.check_cache.outputs.rtl_cache_hit"
 
     # If we write to the cache from the self-hosted runner, the result is
@@ -364,18 +364,6 @@ jobs:
         uses: actions/cache/save@v3
         with:
           path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa
-          key: ${{ needs.check_cache.outputs.rtl_cache_key }}
-
-      - name: 'Download FPGA boot bin Artifact'
-        uses: actions/download-artifact@v4
-        with:
-          name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: /tmp/caliptra-fpga-boot
-
-      - name: Save FPGA boot bin to cache
-        uses: actions/cache/save@v3
-        with:
-          path: /tmp/caliptra-fpga-boot/BOOT.BIN
           key: ${{ needs.check_cache.outputs.rtl_cache_key }}
 
   test_artifacts:
