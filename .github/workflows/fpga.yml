@@ -66,8 +66,6 @@ jobs:
           fi
           echo "rtl_cache_key=$(git rev-parse HEAD:hw/fpga/src)-$(git hash-object hw/fpga/fpga_configuration.tcl)-$(cd hw/${RTL_VERSION}/rtl && git rev-parse HEAD)-${{ inputs.fpga-itrng }}-${{ env.CACHE_BUSTER }}" >> $GITHUB_OUTPUT
 
-          echo "kmod_cache_key=fpga-kernel-modules-$(git rev-parse HEAD:hw/fpga/io_module)-$(git rev-parse HEAD:hw/fpga/rom_backdoor)-${{ env.CACHE_BUSTER }}" >> $GITHUB_OUTPUT
-
       - name: Restore FPGA bitstream from cache
         uses: actions/cache/restore@v3
         id: restore_rtl_bitstream_cache
@@ -199,6 +197,7 @@ jobs:
   build_bitstream:
     runs-on: [vck190-builder]
     timeout-minutes: 720
+    needs: check_cache
     if: "!needs.check_cache.outputs.rtl_cache_hit"
 
     steps:
@@ -250,6 +249,7 @@ jobs:
   build_bootloader:
     runs-on: [e2-standard-8, fpga-tools]
     # needs: [build_bitstream]
+    needs: check_cache
 
     steps:
       - name: Checkout repo
