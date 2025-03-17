@@ -13,17 +13,6 @@ set -eux
 
 xsa_location=$(realpath $1)
 
-trap '{
-  if [ $? -ne 0 ]
-  then
-    cat "${GITHUB_WORKSPACE}/hw/fpga/petalinux_project/build/config.log"
-    echo FAILED TO CREATE BOOT.BIN
-    exit 1
-  else
-    echo SUCCESS
-  fi  
-}' EXIT
-
 echo Creating project
 petalinux-create -t project --template versal --name petalinux_project
 pushd petalinux_project
@@ -53,3 +42,6 @@ dtc -I dts -O dtb -o images/linux/system.dtb images/linux/system.dts
 echo Packaging boot files
 petalinux-package --boot --format BIN --plm --psmfw --u-boot --dtb --force
 popd
+
+
+(cat "${GITHUB_WORKSPACE}/hw/fpga/petalinux_project/build/config.log" || true)
