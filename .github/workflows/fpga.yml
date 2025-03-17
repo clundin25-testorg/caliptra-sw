@@ -277,7 +277,8 @@ jobs:
 
       - name: Build FPGA boot BIN
         run: |
-          bash source /fpga-tools/petalinux-tools/settings.sh
+          bash 
+          source /fpga-tools/petalinux-tools/settings.sh
           (cd hw/fpga && ./create_boot_bin.sh /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa)
 
   test_artifacts:
