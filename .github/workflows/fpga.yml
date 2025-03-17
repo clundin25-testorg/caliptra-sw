@@ -278,6 +278,8 @@ jobs:
       - name: Build FPGA boot BIN
         run: |
           bash 
+          scp /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa .
+          sudo chmod 755 caliptra_fpga.xsa
           source /fpga-tools/petalinux-tools/settings.sh
           (cd hw/fpga && ./create_boot_bin.sh /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa)
 

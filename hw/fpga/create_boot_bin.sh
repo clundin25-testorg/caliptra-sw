@@ -9,9 +9,10 @@ if [[ -z $1 ]]; then
     exit
 fi
 
+set -eux
+
 xsa_location=$(realpath $1)
 
-set -e
 trap '{
   if [ $? -ne 0 ]
   then
