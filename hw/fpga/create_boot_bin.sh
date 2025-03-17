@@ -16,6 +16,7 @@ xsa_location=$(realpath $1)
 trap '{
   if [ $? -ne 0 ]
   then
+    cat "${GITHUB_WORKSPACE}/hw/fpga/petalinux_project/build/config.log"
     echo FAILED TO CREATE BOOT.BIN
     exit 1
   else
