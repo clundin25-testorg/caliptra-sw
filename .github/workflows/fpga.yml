@@ -247,7 +247,7 @@ jobs:
 
 
   build_bootloader:
-    runs-on: [e2-standard-32, fpga-tools]
+    runs-on: [e2-standard-8, fpga-tools]
     # needs: [build_bitstream]
     needs: check_cache
 
