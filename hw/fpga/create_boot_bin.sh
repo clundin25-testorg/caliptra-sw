@@ -12,8 +12,6 @@ fi
 
 set -eu
 
-source /fpga-tools/petalinux-tools/settings.sh
-
 xsa_location=$(realpath $1)
 
 echo Creating project
