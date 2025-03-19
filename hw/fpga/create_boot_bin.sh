@@ -16,13 +16,15 @@ source petalinux-tools/settings.sh
 
 set -x
 
+mkdir work_dir
 echo Creating project
-petalinux-create -t project --template versal --name petalinux_project
+petalinux-create -t project --template versal --name petalinux_project --tmpdir $PWD/work_dir
 pushd petalinux_project
 echo Adding xsa
 
 mkdir work_dir
-echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig
+OUT="$(echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig --debug)"
+echo $OUT
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
