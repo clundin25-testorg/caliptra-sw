@@ -10,7 +10,7 @@ if [[ -z $1 ]]; then
     exit
 fi
 
-set -eux
+set -eu
 
 source /fpga-tools/petalinux-tools/settings.sh
 
