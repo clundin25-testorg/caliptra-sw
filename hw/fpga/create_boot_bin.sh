@@ -21,7 +21,8 @@ petalinux-create -t project --template versal --name petalinux_project
 pushd petalinux_project
 echo Adding xsa
 
-strace petalinux-config --get-hw-description $xsa_location --silentconfig
+mkdir work_dir
+echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig --tmpdir $PWD/work_dir
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
