@@ -281,7 +281,10 @@ jobs:
           sudo chmod 755 caliptra_fpga.xsa
           scp -r /fpga-tools/petalinux-tools .
           sudo chmod -R 755 petalinux-tools
-          bash hw/fpga/create_boot_bin.sh 
+          mkdir work_dir
+          sudo chmod -R 755 work_dir
+          cd work_dir
+          bash ../hw/fpga/create_boot_bin.sh 
 
   # test_artifacts:
   #   runs-on: caliptra-fpga
