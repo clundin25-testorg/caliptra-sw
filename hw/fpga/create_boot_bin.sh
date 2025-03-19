@@ -14,6 +14,8 @@ scp -r /fpga-tools/petalinux-tools .
 sudo chmod -R 755 petalinux-tools
 source petalinux-tools/settings.sh
 
+set -x
+
 echo Creating project
 petalinux-create -t project --template versal --name petalinux_project
 pushd petalinux_project

@@ -277,14 +277,11 @@ jobs:
 
       - name: Build FPGA boot BIN
         run: |
-          scp /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa .
-          sudo chmod 755 caliptra_fpga.xsa
-          scp -r /fpga-tools/petalinux-tools .
-          sudo chmod -R 755 petalinux-tools
           mkdir work_dir
           sudo chmod -R 755 work_dir
           cd work_dir
           bash ../hw/fpga/create_boot_bin.sh 
+          cat /home/runner/actions-runner/_work/caliptra-sw/caliptra-sw/work_dir/petalinux_project/build/config.log
 
   # test_artifacts:
   #   runs-on: caliptra-fpga
