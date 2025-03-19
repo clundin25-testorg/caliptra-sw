@@ -14,6 +14,7 @@ set -eu
 
 xsa_location=$(realpath $1)
 
+source petalinux-tools/settings.sh
 echo Creating project
 petalinux-create -t project --template versal --name petalinux_project
 pushd petalinux_project
