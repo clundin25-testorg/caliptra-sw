@@ -20,7 +20,8 @@ echo Creating project
 petalinux-create -t project --template versal --name petalinux_project
 pushd petalinux_project
 echo Adding xsa
-xvfb-run -a petalinux-config --get-hw-description $xsa_location --silentconfig
+
+strace petalinux-config --get-hw-description $xsa_location --silentconfig
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
