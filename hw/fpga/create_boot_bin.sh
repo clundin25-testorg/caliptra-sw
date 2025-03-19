@@ -23,7 +23,7 @@ pushd petalinux_project
 echo Adding xsa
 
 mkdir work_dir
-OUT="$(echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig --debug)"
+OUT="$(echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig)"
 echo $OUT
 
 echo Modifying Petalinux configuration
