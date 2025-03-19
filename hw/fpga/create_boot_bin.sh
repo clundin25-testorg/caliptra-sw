@@ -10,10 +10,8 @@ scp /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa .
 sudo chmod 755 caliptra_fpga.xsa
 xsa_location=$(realpath $PWD/caliptra_fpga.xsa)
 
-curl -LO "https://www.xilinx.com/member/forms/download/xef.html?filename=petalinux-v2022.2-10141622-installer.run"
-sudo chmod 755 petalinux-v2022.2-10141622-installer.run
-./petalinux-v2022.2-10141622-installer.run --dir $PWD/petalinux-tools -y
-
+scp -r /fpga-tools/petalinux-tools .
+sudo chmod -R 755 petalinux-tools
 source petalinux-tools/settings.sh
 
 set -x
@@ -22,7 +20,7 @@ echo Creating project
 petalinux-create -t project --template versal --name petalinux_project
 pushd petalinux_project
 echo Adding xsa
-petalinux-config --get-hw-description $xsa_location --silentconfig
+xvfb-run -a petalinux-config --get-hw-description $xsa_location --silentconfig
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
