@@ -22,7 +22,7 @@ pushd petalinux_project
 echo Adding xsa
 
 mkdir work_dir
-echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig --tmpdir $PWD/work_dir
+echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
