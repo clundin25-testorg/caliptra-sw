@@ -6,8 +6,12 @@
 
 set -eu
 
+scp /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa .
+sudo chmod 755 caliptra_fpga.xsa
 xsa_location=$(realpath $PWD/caliptra_fpga.xsa)
 
+scp -r /fpga-tools/petalinux-tools .
+sudo chmod -R 755 petalinux-tools
 source petalinux-tools/settings.sh
 
 echo Creating project
