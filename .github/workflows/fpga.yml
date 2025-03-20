@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache/restore@v3
         id: restore_rtl_bitstream_cache
         with:
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa
+          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
           key: ${{ steps.cache_key.outputs.rtl_cache_key }}
 
       - name: 'Upload FPGA bitstream artifact'
@@ -78,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa
+          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
           retention-days: 7
 
   # build_test_binaries:
@@ -211,7 +211,7 @@ jobs:
           cd hw/fpga
           mkdir caliptra_build
           /fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE
-          if [ ! -f caliptra_build/caliptra_fpga.xsa ]; then
+          if [ ! -f caliptra_build/caliptra_fpga.bin ]; then
             echo "XSA file was not found; failing script"
             exit 1
           fi
@@ -220,7 +220,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: hw/fpga/caliptra_build/caliptra_fpga.xsa
+          path: hw/fpga/caliptra_build/caliptra_fpga.bin
 
   cache_fpga_bitstream_artifact:
     runs-on: ubuntu-22.04
@@ -241,47 +241,47 @@ jobs:
       - name: Save FPGA bitstream to cache
         uses: actions/cache/save@v3
         with:
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa
+          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
           key: ${{ needs.check_cache.outputs.rtl_cache_key }}
 
 
 
-  build_bootloader:
-    runs-on: [e2-standard-8, fpga-tools]
-    # needs: [build_bitstream]
-    needs: check_cache
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          submodules: 'recursive' # There are nested submodules that we need.
-      - name: Setup petalinux deps
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt update
-          sudo apt install gcc libncurses-dev zlib1g:i386 zlib1g-dev net-tools xterm autoconf libtool texinfo gcc-multilib build-essential device-tree-compiler xvfb -y
-
-      - name: 'Download FPGA Bitstream Artifact'
-        uses: actions/download-artifact@v4
-        with:
-          name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: /tmp/caliptra-fpga-bitstream
-
-      - name: Mount FPGA tools
-        run: |
-          # This is an installation of Vivado 22.2 with support for Zynq Ultrascale+
-          echo "Starting work"
-          sudo mkdir /fpga-tools
-          sudo mount UUID=be18f242-fb8d-4d99-971e-a8ae390ad620 /fpga-tools/
-
-      - name: Build FPGA boot BIN
-        run: |
-          mkdir work_dir
-          sudo chmod -R 755 work_dir
-          cd work_dir
-          bash ../hw/fpga/create_boot_bin.sh 
-          cat /home/runner/actions-runner/_work/caliptra-sw/caliptra-sw/work_dir/petalinux_project/build/config.log
+  # build_bootloader:
+  #   runs-on: [e2-standard-8, fpga-tools]
+  #   # needs: [build_bitstream]
+  #   needs: check_cache
+  #
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         submodules: 'recursive' # There are nested submodules that we need.
+  #     - name: Setup petalinux deps
+  #       run: |
+  #         sudo dpkg --add-architecture i386
+  #         sudo apt update
+  #         sudo apt install gcc libncurses-dev zlib1g:i386 zlib1g-dev net-tools xterm autoconf libtool texinfo gcc-multilib build-essential device-tree-compiler xvfb -y
+  #
+  #     - name: 'Download FPGA Bitstream Artifact'
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
+  #         path: /tmp/caliptra-fpga-bitstream
+  #
+  #     - name: Mount FPGA tools
+  #       run: |
+  #         # This is an installation of Vivado 22.2 with support for Zynq Ultrascale+
+  #         echo "Starting work"
+  #         sudo mkdir /fpga-tools
+  #         sudo mount UUID=be18f242-fb8d-4d99-971e-a8ae390ad620 /fpga-tools/
+  #
+  #     - name: Build FPGA boot BIN
+  #       run: |
+  #         mkdir work_dir
+  #         sudo chmod -R 755 work_dir
+  #         cd work_dir
+  #         bash ../hw/fpga/create_boot_bin.sh 
+  #         cat /home/runner/actions-runner/_work/caliptra-sw/caliptra-sw/work_dir/petalinux_project/build/config.log
 
   # test_artifacts:
   #   runs-on: caliptra-fpga
