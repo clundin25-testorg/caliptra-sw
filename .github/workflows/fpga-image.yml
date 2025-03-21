@@ -7,7 +7,7 @@ on:
       - "ci-tools/fpga-image/**"
 
   push:
-    branches: ["main", "fpga-2.0-ci"]
+    branches: ["main", "fpga-2.0-ci", "fpga-image-build"]
     paths:
       - "ci-tools/fpga-image/**"
 
