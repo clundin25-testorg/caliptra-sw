@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache/restore@v3
         id: restore_rtl_bitstream_cache
         with:
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
+          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.pdi
           key: ${{ steps.cache_key.outputs.rtl_cache_key }}
 
       - name: 'Upload FPGA bitstream artifact'
@@ -78,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
+          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.pdi
           retention-days: 7
 
   # build_test_binaries:
@@ -211,7 +211,7 @@ jobs:
           cd hw/fpga
           mkdir caliptra_build
           /fpga-tools/Xilinx/Vivado/2022.2/bin/vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE
-          if [ ! -f caliptra_build/caliptra_fpga.bin ]; then
+          if [ ! -f caliptra_build/caliptra_fpga.pdi ]; then
             echo "XSA file was not found; failing script"
             exit 1
           fi
@@ -220,7 +220,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
-          path: hw/fpga/caliptra_build/caliptra_fpga.bin
+          path: hw/fpga/caliptra_build/caliptra_fpga.pdi
 
   cache_fpga_bitstream_artifact:
     runs-on: ubuntu-22.04
@@ -241,7 +241,7 @@ jobs:
       - name: Save FPGA bitstream to cache
         uses: actions/cache/save@v3
         with:
-          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.bin
+          path: /tmp/caliptra-fpga-bitstream/caliptra_fpga.pdi
           key: ${{ needs.check_cache.outputs.rtl_cache_key }}
 
 
