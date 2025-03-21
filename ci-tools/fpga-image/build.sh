@@ -58,7 +58,7 @@ function cleanup3 {
 }
 trap cleanup3 EXIT
 
-touch out/rootfs/etc/cloud/cloud-init.disabled
+#touch out/rootfs/etc/cloud/cloud-init.disabled
 mkdir -p out/rootfs/etc/sudoers.d/
 echo "runner ALL=(ALL) NOPASSWD:ALL" > out/rootfs/etc/sudoers.d/runner
 chroot out/rootfs useradd runner --shell /bin/bash --create-home
@@ -92,7 +92,7 @@ cp startup-script.service out/rootfs/etc/systemd/system/
 chroot out/rootfs systemctl enable startup-script.service
 
 # We want to boot into the startup-script, not cloud-init.
-chroot out/rootfs systemctl disable cloud-init.service
+#chroot out/rootfs systemctl disable cloud-init.service
 
 umount out/rootfs
 losetup -d ${LOOPBACK_DEV}

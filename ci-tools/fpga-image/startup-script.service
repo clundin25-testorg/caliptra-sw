@@ -2,7 +2,9 @@
 [Unit]
 After=serial-getty.target
 After=network-online.target
+After=cloud-init.target
 Wants=network-online.target
+Wants=cloud-init.target
 Conflicts=serial-getty@ttyAMA0.service
 
 [Service]
