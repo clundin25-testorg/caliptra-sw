@@ -4,31 +4,27 @@
 # This script generates a Versal BOOT.BIN using Petalinux.
 # When using an ubuntu image BOOT.BIN replaces boot1901.bin in the boot partition.
 
-if [[ -z $1 ]]; then
-    echo "create_boot_bin.sh [/path/to/caliptra_fpga_project_bd_wrapper.xsa]"
-    exit
-fi
+set -eu
 
-xsa_location=$(realpath $1)
+scp /tmp/caliptra-fpga-bitstream/caliptra_fpga.xsa .
+sudo chmod 755 caliptra_fpga.xsa
+xsa_location=$(realpath $PWD/caliptra_fpga.xsa)
 
-set -e
-trap '{
-  if [ $? -ne 0 ]
-  then
-    echo FAILED TO CREATE BOOT.BIN
-    exit 1
-  else
-    echo SUCCESS
-  fi  
-}' EXIT
+scp -r /fpga-tools/petalinux-tools .
+sudo chmod -R 755 petalinux-tools
+source petalinux-tools/settings.sh
 
-echo Deleting old project
-rm -rf petalinux_project
+set -x
+
+mkdir work_dir
 echo Creating project
-petalinux-create -t project --template versal --name petalinux_project
-cd petalinux_project
+petalinux-create -t project --template versal --name petalinux_project --tmpdir $PWD/work_dir
+pushd petalinux_project
 echo Adding xsa
-petalinux-config --get-hw-description $xsa_location --silentconfig
+
+mkdir work_dir
+OUT="$(echo "Test" | petalinux-config --get-hw-description $xsa_location --silentconfig)"
+echo $OUT
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
@@ -52,4 +48,7 @@ dtc -I dts -O dtb -o images/linux/system.dtb images/linux/system.dts
 
 echo Packaging boot files
 petalinux-package --boot --format BIN --plm --psmfw --u-boot --dtb --force
-cd ../
+popd
+
+
+(cat "${GITHUB_WORKSPACE}/hw/fpga/petalinux_project/build/config.log" || true)
