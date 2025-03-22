@@ -5,7 +5,6 @@
 # a VCK190 FPGA dev board, and be ready to accept GHA runner
 # jitconfig passed in over UART by fpga-boss.
 
-echo "Hello"
 set -eux
 
 mkdir -p out
