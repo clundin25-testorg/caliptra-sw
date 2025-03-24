@@ -26,28 +26,6 @@ function cleanup1 {
 }
 trap cleanup1 EXIT
 
-(rm -r out/bootfs || true)
-mkdir -p out/bootfs
-
-mount "${LOOPBACK_DEV}p1" out/bootfs
-
-function cleanup2 {
-  umount out/bootfs
-  cleanup1
-}
-trap cleanup2 EXIT
-
-# Load FPGA bit stream
-# TODO: Get bitstream from GH actions
-(rm out/boot1900.zip || true)
-(rm out/boot1900.bin || true)
-curl -L "https://github.com/clundin25/caliptra-sw/releases/download/release_v20241005_0/boot1900.zip" -o out/boot1900.zip
-unzip out/boot1900.zip -d out/
-cp out/boot1900.bin out/bootfs/boot1900.bin
-
-umount out/bootfs
-trap cleanup1 EXIT
-
 (rm -r out/rootfs || true)
 mkdir -p out/rootfs
 mount "${LOOPBACK_DEV}p2" out/rootfs
