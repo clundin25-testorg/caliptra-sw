@@ -328,10 +328,10 @@ jobs:
 
       - name: Load FPGA Bitstream
         run: |
-          # sha256sum /tmp/caliptra-fpga/caliptra_fpga.bin
+          # sha256sum /tmp/caliptra-fpga/caliptra_fpga.pdi
           sudo mkdir -p /lib/firmware
           sudo cp /tmp/caliptra-fpga-bitstream/caliptra_fpga.pdi /lib/firmware/caliptra_fpga.pdi
-          sudo bash -c 'echo 0 > /sys/class/fpga_manager/fpga0/flags'
+          #sudo bash -c 'echo 0 > /sys/class/fpga_manager/fpga0/flags'
           echo "Uploading bitstream"
           sudo bash -c 'echo caliptra_fpga.pdi > /sys/class/fpga_manager/fpga0/firmware'
           echo "Upload complete"
@@ -357,7 +357,7 @@ jobs:
         run: |
           export RUST_TEST_THREADS=1
           TEST_BIN=/tmp/caliptra-test-binaries
-          VARS="CPTRA_UIO_NUM=4 CALIPTRA_PREBUILT_FW_DIR=/tmp/caliptra-test-firmware CALIPTRA_IMAGE_NO_GIT_REVISION=1"
+          VARS="CPTRA_UIO_NUM=0 CALIPTRA_PREBUILT_FW_DIR=/tmp/caliptra-test-firmware CALIPTRA_IMAGE_NO_GIT_REVISION=1"
 
           if [ "${{ inputs.rom-logging }}" == "true" ] || [ -z "${{ inputs.rom-logging }}" ]; then
             VARS+=" CPTRA_ROM_TYPE=ROM_WITH_UART"
