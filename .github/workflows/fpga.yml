@@ -349,6 +349,7 @@ jobs:
           # ls -l /tmp/caliptra-fpga-kmod
           # sudo insmod /tmp/caliptra-fpga-kmod/io_module.ko
           # sudo insmod /tmp/caliptra-fpga-kmod/rom_backdoor.ko
+          echo "Bump PR"
           sudo apt update
           sudo apt install -y make gcc
           sudo ./hw/fpga/setup_fpga.sh
