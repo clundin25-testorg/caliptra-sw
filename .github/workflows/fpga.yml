@@ -349,13 +349,14 @@ jobs:
           # ls -l /tmp/caliptra-fpga-kmod
           # sudo insmod /tmp/caliptra-fpga-kmod/io_module.ko
           # sudo insmod /tmp/caliptra-fpga-kmod/rom_backdoor.ko
-          echo "Bump PR"
+          echo "Bump PR x2"
           sudo apt update
           sudo apt install -y make gcc
           sudo ./hw/fpga/setup_fpga.sh
 
       - name: Execute tests
         run: |
+          sleep 60m
           export RUST_TEST_THREADS=1
           TEST_BIN=/tmp/caliptra-test-binaries
           VARS="CPTRA_UIO_NUM=0 CALIPTRA_PREBUILT_FW_DIR=/tmp/caliptra-test-firmware CALIPTRA_IMAGE_NO_GIT_REVISION=1"
