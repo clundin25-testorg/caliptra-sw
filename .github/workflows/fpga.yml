@@ -326,23 +326,23 @@ jobs:
           sudo mount /tmp/caliptra-test-binaries.sqsh/caliptra-test-binaries.sqsh /tmp/caliptra-test-binaries -t squashfs -o loop
           find /tmp/caliptra-test-binaries
 
-      - name: Load FPGA Bitstream
-        run: |
-          # sha256sum /tmp/caliptra-fpga/caliptra_fpga.pdi
-          sudo mkdir -p /lib/firmware
-          sudo cp /tmp/caliptra-fpga-bitstream/caliptra_fpga.pdi /lib/firmware/caliptra_fpga.pdi
-          #sudo bash -c 'echo 0 > /sys/class/fpga_manager/fpga0/flags'
-          echo "Uploading bitstream"
-          sudo bash -c 'echo caliptra_fpga.pdi > /sys/class/fpga_manager/fpga0/firmware'
-          echo "Upload complete"
-
-          state="$(sudo cat /sys/class/fpga_manager/fpga0/state)"
-          echo FPGA state is "${state}"
-          if [ "$state" = "operating" ]; then
-            exit 0
-          else
-            exit 1
-          fi
+      # - name: Load FPGA Bitstream
+      #   run: |
+      #     # sha256sum /tmp/caliptra-fpga/caliptra_fpga.pdi
+      #     sudo mkdir -p /lib/firmware
+      #     sudo cp /tmp/caliptra-fpga-bitstream/caliptra_fpga.pdi /lib/firmware/caliptra_fpga.pdi
+      #     #sudo bash -c 'echo 0 > /sys/class/fpga_manager/fpga0/flags'
+      #     echo "Uploading bitstream"
+      #     sudo bash -c 'echo caliptra_fpga.pdi > /sys/class/fpga_manager/fpga0/firmware'
+      #     echo "Upload complete"
+      #
+      #     state="$(sudo cat /sys/class/fpga_manager/fpga0/state)"
+      #     echo FPGA state is "${state}"
+      #     if [ "$state" = "operating" ]; then
+      #       exit 0
+      #     else
+      #       exit 1
+      #     fi
 
       - name: Install kernel modules
         run: |
