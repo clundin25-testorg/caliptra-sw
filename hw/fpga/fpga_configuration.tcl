@@ -229,6 +229,5 @@ if {$BUILD} {
   open_run impl_1
   report_utilization -file $outputDir/utilization.txt
 
-  #write_hw_platform -fixed -include_bit -force -file $outputDir/caliptra_fpga.xsa
-  write_device_image  $outputDir/caliptra_fpga.pdi
+  write_hw_platform -fixed -include_bit -force -file $outputDir/caliptra_fpga.xsa
 }
