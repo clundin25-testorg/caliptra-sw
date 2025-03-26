@@ -148,7 +148,7 @@ func Launch(ctx context.Context, client *github.Client, labels []string) error {
 	if err != nil {
 		return err
 	}
-	disks := singleDisk("global/images/family/github-runner", 16)
+	disks := singleDisk("global/images/family/github-runner", 100)
 	if machineInfo.hasFpgaTools {
 		disks = append(disks, &computepb.AttachedDisk{
 			Source: proto.String(fmt.Sprintf("zones/%s/disks/fpga-tools", gcpZone)),
@@ -157,6 +157,7 @@ func Launch(ctx context.Context, client *github.Client, labels []string) error {
 	}
 
 	script := strings.ReplaceAll(launchStartupScript, "${JITCONFIG}", runner.JitConfig)
+    log.Printf("startup script: %v\n", script)
 
 	return createInstanceAndStart(ctx, instances, &computepb.InsertInstanceRequest{
 		Project: gcpProject,
