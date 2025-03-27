@@ -3,7 +3,7 @@ name: FPGA Build
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "fpga-2.0-ci"]
   pull_request:
   workflow_call:
     inputs:
@@ -65,6 +65,40 @@ jobs:
             RTL_VERSION="latest"
           fi
           echo "rtl_cache_key=$(git rev-parse HEAD:hw/fpga/src)-$(git hash-object hw/fpga/fpga_configuration.tcl)-$(cd hw/${RTL_VERSION}/rtl && git rev-parse HEAD)-${{ inputs.fpga-itrng }}-${{ env.CACHE_BUSTER }}" >> $GITHUB_OUTPUT
+
+  build_bootloader:
+    runs-on: [e2-standard-16, vck190-tools]
+    # needs: [build_bitstream]
+    needs: check_cache
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+      - name: Setup petalinux deps
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install gcc libncurses-dev zlib1g:i386 zlib1g-dev net-tools xterm autoconf libtool texinfo gcc-multilib build-essential device-tree-compiler xvfb -y
+
+      # - name: 'Download FPGA Bitstream Artifact'
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: caliptra-fpga-bitstream${{ inputs.artifact-suffix }}
+      #     path: /tmp/caliptra-fpga-bitstream
+
+      - name: Mount FPGA tools
+        run: |
+          echo "Starting work"
+          sudo mkdir /vck190-tools
+          sudo mount UUID=f7d4fff3-fd68-4e9a-adf7-2ca5378edc23 /vck190-tools/
+
+      - name: Build FPGA boot BIN
+        run: |
+          cd hw/fpga
+          bash ./create_boot_bin.sh 
+          #cat /home/runner/actions-runner/_work/caliptra-sw/caliptra-sw/work_dir/petalinux_project/build/config.log
 
   build_test_binaries:
     runs-on: [e2-standard-16]

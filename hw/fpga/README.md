@@ -73,9 +73,9 @@ This script provides a number of configuration options for features that can be 
 
  - Build FPGA image without GUI
     - `vivado -mode batch -source fpga_configuration.tcl -tclargs BUILD=TRUE`
-    - Above command creates a bitstream located at: caliptra_build/caliptra_fpga.bin
+    - Above command creates a bitstream located at: caliptra_build/caliptra_fpga.xsa
     - To check the git revision a bitstream was generated with
-      - `xxd -s 0x88 -l 8 caliptra_build/caliptra_fpga.bin`
+      - `xxd -s 0x88 -l 8 caliptra_build/caliptra_fpga.xsa
       - Result should be `3001 a001 xxxx xxxx`. 3001 a001 is a command to write the USR_ACCESS register and the rest is the hash.
  - Launch Vivado with GUI
     - `vivado -mode batch -source fpga_configuration.tcl -tclargs GUI=TRUE`
