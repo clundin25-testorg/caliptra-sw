@@ -186,6 +186,10 @@ jobs:
       !cancelled() &&
       needs.check_cache.result == 'success' &&
       (needs.build_test_binaries.result == 'success' || needs.build_test_binaries.result == 'skipped')
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repo
