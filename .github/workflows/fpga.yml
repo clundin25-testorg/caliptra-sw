@@ -97,7 +97,7 @@ jobs:
       - name: Build FPGA boot BIN
         run: |
           cd hw/fpga
-          bash hw/fpga/create_boot_bin.sh 
+          bash ./create_boot_bin.sh 
           #cat /home/runner/actions-runner/_work/caliptra-sw/caliptra-sw/work_dir/petalinux_project/build/config.log
 
   build_test_binaries:
