@@ -22,13 +22,13 @@ trap '{
   fi  
 }' EXIT
 
-echo Deleting old project
-rm -rf petalinux_project
-echo Creating project
-petalinux-create -t project --template versal --name petalinux_project
+source /vck190-tools/petalinux-tool/settings.sh
+
+# petalinux-create -t project --template versal --name petalinux_project
 cd petalinux_project
 echo Adding xsa
-petalinux-config --get-hw-description $xsa_location --silentconfig
+#TODO(clundin): Copy new XSA in
+# petalinux-config --get-hw-description $xsa_location --silentconfig
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
