@@ -3,7 +3,7 @@ name: FPGA Build
 
 on:
   push:
-    branches: ["main", "fpga-2.0-ci", "bootloader-build"]
+    branches: ["main", "fpga-2.0-ci"]
   pull_request:
   workflow_call:
     inputs:
@@ -96,7 +96,7 @@ jobs:
 
       - name: Build FPGA boot BIN
         run: |
-          bash ../hw/fpga/create_boot_bin.sh 
+          bash hw/fpga/create_boot_bin.sh 
           #cat /home/runner/actions-runner/_work/caliptra-sw/caliptra-sw/work_dir/petalinux_project/build/config.log
 
   build_test_binaries:
