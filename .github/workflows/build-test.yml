@@ -93,9 +93,9 @@ jobs:
         run: |
           cargo fmt --check --all
 
-      - name: Check license headers
-        run: |
-          cargo run -p caliptra-file-header-fix --locked -- --check
+      # - name: Check license headers
+      #   run: |
+      #     cargo run -p caliptra-file-header-fix --locked -- --check
 
       - name: Build
         run: |

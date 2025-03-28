@@ -4,14 +4,14 @@
 # This script generates a Versal BOOT.BIN using Petalinux.
 # When using an ubuntu image BOOT.BIN replaces boot1901.bin in the boot partition.
 
-if [[ -z $1 ]]; then
-    echo "create_boot_bin.sh [/path/to/caliptra_fpga_project_bd_wrapper.xsa]"
-    exit
-fi
+# if [[ -z $1 ]]; then
+#     echo "create_boot_bin.sh [/path/to/caliptra_fpga_project_bd_wrapper.xsa]"
+#     exit 1
+# fi
 
-xsa_location=$(realpath $1)
+#xsa_location=$(realpath $1)
 
-set -e
+set -ex
 trap '{
   if [ $? -ne 0 ]
   then
@@ -22,13 +22,13 @@ trap '{
   fi  
 }' EXIT
 
-echo Deleting old project
-rm -rf petalinux_project
-echo Creating project
-petalinux-create -t project --template versal --name petalinux_project
+source /vck190-tools/petalinux-tool/settings.sh
+
+# petalinux-create -t project --template versal --name petalinux_project
 cd petalinux_project
 echo Adding xsa
-petalinux-config --get-hw-description $xsa_location --silentconfig
+#TODO(clundin): Copy new XSA in
+# petalinux-config --get-hw-description $xsa_location --silentconfig
 
 echo Modifying Petalinux configuration
 # Set ROOTFS to EXT4
