@@ -11,7 +11,7 @@
 
 #xsa_location=$(realpath $1)
 
-set -e
+set -ex
 trap '{
   if [ $? -ne 0 ]
   then
