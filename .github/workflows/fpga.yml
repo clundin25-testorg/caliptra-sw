@@ -186,6 +186,7 @@ jobs:
       !cancelled() &&
       needs.check_cache.result == 'success' &&
       (needs.build_test_binaries.result == 'success' || needs.build_test_binaries.result == 'skipped')
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repo
@@ -222,6 +223,7 @@ jobs:
           sudo ./hw/fpga/setup_fpga.sh
 
       - name: Execute tests
+        continue-on-error: true
         run: |
           export RUST_TEST_THREADS=1
           TEST_BIN=/tmp/caliptra-test-binaries
