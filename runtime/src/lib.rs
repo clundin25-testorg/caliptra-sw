@@ -42,6 +42,7 @@ mod verify;
 pub mod mailbox;
 use authorize_and_stash::AuthorizeAndStashCmd;
 use caliptra_cfi_lib_git::{cfi_assert, cfi_assert_eq, cfi_assert_ne, cfi_launder, CfiCounter};
+use caliptra_registers::mbox::enums::MboxFsmE;
 use caliptra_registers::soc_ifc::SocIfcReg;
 pub use drivers::{Drivers, PauserPrivileges};
 use mailbox::Mailbox;
@@ -268,8 +269,8 @@ pub fn handle_mailbox_commands(drivers: &mut Drivers) -> CaliptraResult<()> {
     drivers.soc_ifc.assert_ready_for_runtime();
     caliptra_drivers::report_boot_status(RtBootStatus::RtReadyForCommands.into());
     // Disable attestation if in the middle of executing an mbox cmd during warm reset
-    let cmd_busy = drivers.mbox.cmd_busy();
-    if cmd_busy {
+    let mailbox_flow_is_active = !drivers.soc_ifc.flow_status_mailbox_flow_done();
+    if mailbox_flow_is_active {
         let reset_reason = drivers.soc_ifc.reset_reason();
         if reset_reason == ResetReason::WarmReset {
             cfi_assert_eq(drivers.soc_ifc.reset_reason(), ResetReason::WarmReset);
@@ -293,7 +294,7 @@ pub fn handle_mailbox_commands(drivers: &mut Drivers) -> CaliptraResult<()> {
             }
         }
     } else {
-        cfi_assert!(!cmd_busy);
+        cfi_assert!(!mailbox_flow_is_active);
     }
     #[cfg(feature = "riscv")]
     setup_mailbox_wfi(drivers);
@@ -302,6 +303,9 @@ pub fn handle_mailbox_commands(drivers: &mut Drivers) -> CaliptraResult<()> {
         if drivers.is_shutdown {
             return Err(CaliptraError::RUNTIME_SHUTDOWN);
         }
+
+        // No command is executing, set the mailbox flow done to true before beginning idle.
+        drivers.soc_ifc.flow_status_set_mailbox_flow_done(true);
 
         enter_idle(drivers);
 
@@ -314,6 +318,10 @@ pub fn handle_mailbox_commands(drivers: &mut Drivers) -> CaliptraResult<()> {
         // transitions away from MBOX_EXECUTE_UC and back.
         let cmd_ready = drivers.soc_ifc.has_mbox_notif_status();
         if cmd_ready {
+            // We have woken from idle and have a command ready, set the mailbox flow done to false until we return to
+            // idle.
+            drivers.soc_ifc.flow_status_set_mailbox_flow_done(false);
+
             // Acknowledge the interrupt so we go back to sleep after
             // processing the mailbox. After this point, if the mailbox is
             // still in the MBOX_EXECUTE_UC state before going back to
