@@ -9,8 +9,9 @@
 echo 3 > /proc/sys/kernel/printk
 
 function runner_jitconfig() {
+  TOKEN=$(cat /etc/github_token.txt"
   echo "Executing GHA runner"
-  su runner -c "./run.sh --jitconfig \"${cmd_array[1]}\""
+  su runner -c "./run.sh --jitconfig \"${TOKEN}\""
   echo "GHA runner complete"
 }
 
@@ -26,10 +27,8 @@ read cmd
 cmd_array=($cmd)
 if [[ "${cmd}" == "login" ]]; then
     login -f root
-elif [[ "${cmd_array[0]}" == "runner-jitconfig" ]]; then
-    runner_jitconfig
 else
-    echo "Unknown command ${cmd}"
+    runner_jitconfig
 fi
 # Emit a sentinel that tells fpga-boss (listening via UART)
 # that we are done and can be reset.
