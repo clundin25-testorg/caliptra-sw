@@ -9,7 +9,7 @@
 echo 3 > /proc/sys/kernel/printk
 
 function runner_jitconfig() {
-  TOKEN=$(cat /etc/github_token.txt"
+  TOKEN=$(cat /etc/github_token.txt")
   echo "Executing GHA runner"
   su runner -c "./run.sh --jitconfig \"${TOKEN}\""
   echo "GHA runner complete"
