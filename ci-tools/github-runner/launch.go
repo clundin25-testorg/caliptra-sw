@@ -107,8 +107,8 @@ func isMachineType(label string) bool {
 }
 
 type MachineInfo struct {
-	machineType  string
-	hasFpgaTools bool
+	machineType    string
+	hasFpgaTools   bool
 	hasVck190Tools bool
 }
 
@@ -179,11 +179,13 @@ func Launch(ctx context.Context, client *github.Client, labels []string) error {
 				"enable-guest-attributes": "TRUE",
 				"serial-port-enable":      "TRUE",
 				"startup-script":          script,
+				"caliptra-ci-bucket":      caliptraCiBucket,
 			}),
 			Labels: map[string]string{
 				"gce-github-runner": "",
 			},
 			NetworkInterfaces: defaultNetworks(),
+			ServiceAccounts:   []*computepb.ServiceAccount{{Email: &githubRunnerSA}},
 		},
 	})
 }
