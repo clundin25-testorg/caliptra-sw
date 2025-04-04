@@ -20,6 +20,10 @@ variable "github_org" {
   type = string
 }
 
+variable "caliptra_ci_bucket" {
+  type = string
+}
+
 locals {
   cf_env_vars = {
     GCP_ZONE    = var.zone
@@ -27,6 +31,8 @@ locals {
     GCP_PROJECT = var.project_id
     GITHUB_APP_ID = var.github_app_id
     GITHUB_ORG = var.github_org
+    CALIPTRA_CI_BUCKET = var.caliptra_ci_bucket
+    GITHUB_RUNNER_SERVICE_ACCOUNT = "${google_service_account.github_runner.email}"
   }
 }
 
@@ -42,7 +48,26 @@ terraform {
   }
 }
 
+//////////////// CI Storage
+
+resource "google_storage_bucket" "caliptra_ci_bucket" {
+  project = var.project_id
+  name = "${var.caliptra_ci_bucket}"
+  force_destroy = false
+  location = "US"
+  storage_class = "STANDARD"
+  versioning {
+    enabled = true
+  }
+  uniform_bucket_level_access = true
+}
+
+
 //////////////// Service accounts
+
+resource "google_service_account" "github_runner" {
+  account_id = "github-runner"
+}
 
 resource "google_service_account" "vm_maintenance_scheduler" {
   account_id = "vm-maintenance-scheduler"
@@ -68,6 +93,7 @@ resource "google_project_service" "enabled_apis" {
     "compute.googleapis.com",
     "run.googleapis.com",
     "secretmanager.googleapis.com",
+    "storage.googleapis.com",
   ])
   project = var.project_id
   service = each.key
@@ -309,6 +335,20 @@ resource "google_service_account" "hw_runners" {
 }
 
 //////////////// IAM Bindings
+
+resource "google_storage_bucket_iam_binding" "github_runner_storage" {
+  role    = "roles/storage.objectViewer"
+  bucket   = google_storage_bucket.caliptra_ci_bucket.name
+  members = [
+    "serviceAccount:${google_service_account.github_runner.email}",
+  ]
+}
+
+resource "google_project_iam_member" "service_account_binding" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.vm_creator.email}"
+}
 
 resource "google_pubsub_topic_iam_binding" "hw_runner_requests" {
   role    = "roles/pubsub.publisher"
