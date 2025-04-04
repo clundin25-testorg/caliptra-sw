@@ -7,7 +7,7 @@
 # CALIPTRA_CI re-uses the checked in petalinux project.
 if [[ -z $1 ]] && [[ -z ${CALIPTRA_CI} ]]; then
     echo "create_boot_bin.sh [/path/to/caliptra_fpga_project_bd_wrapper.xsa]"
-    exit
+    exit 1
 fi
 
 trap '{
