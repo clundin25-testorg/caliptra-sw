@@ -91,6 +91,7 @@ jobs:
 
       - name: Build FPGA boot BIN
         run: |
+          curl "http://metadata.google.internal/computeMetadata/v1/instance/attributes/caliptra-ci-bucket" -H "Metadata-Flavor: Google"
           curl "http://metadata.google.internal/computeMetadata/v1/instance/guest-attributes/caliptra-ci-bucket" -H "Metadata-Flavor: Google"
           export CALIPTRA_CI_BUCKET=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/guest-attributes/caliptra-github-ci/caliptra-ci-bucket" -H "Metadata-Flavor: Google")
           echo $CALIPTRA_CI_BUCKET
