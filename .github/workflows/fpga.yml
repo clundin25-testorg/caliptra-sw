@@ -91,6 +91,8 @@ jobs:
 
       - name: Build FPGA boot BIN
         run: |
+          export CALIPTRA_CI_BUCKET=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/caliptra-ci-bucket" -H "Metadata-Flavor: Google")
+          echo $CALIPTRA_CI_BUCKET
           (cd hw/fpga && bash ./create_boot_bin.sh)
 
   build_test_binaries:
