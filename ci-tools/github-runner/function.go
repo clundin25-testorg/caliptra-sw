@@ -29,6 +29,8 @@ import (
 var gcpZone = envVar("GCP_ZONE")
 var gcpProject = envVar("GCP_PROJECT")
 var githubOrg = envVar("GITHUB_ORG")
+var caliptraCiBucket = envVar("CALIPTRA_CI_BUCKET")
+var githubRunnerSA = envVar("GITHUB_RUNNER_SERVICE_ACCOUNT")
 
 const imageBuilderInstanceName = "github-runner-image-builder"
 
