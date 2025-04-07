@@ -66,6 +66,7 @@ chroot out/rootfs bash -c 'echo kernel.softlockup_panic = 1 >> /etc/sysctl.conf'
 chroot out/rootfs bash -c 'echo kernel.softlockup_all_cpu_backtrace = 1 >> /etc/sysctl.conf'
 chroot out/rootfs bash -c 'echo kernel.panic_print = 127 >> /etc/sysctl.conf'
 chroot out/rootfs bash -c 'echo kernel.sysrq = 1 >> /etc/sysctl.conf'
+chroot out/rootfs bash -c 'apt update && apt install make gcc openocd gdb-multiarch -y'
 
 echo "Retrieving latest GHA runner version"
 RUNNER_VERSION="$(curl https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name[1:]')"
